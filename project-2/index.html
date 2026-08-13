@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music World</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header id="headers" class="heading"> 
+        <h1> Music World</h1>
+
+    </header>
+    <div id="box" class="container">
+        <aside id="sides" class="sidebar">
+            <div>
+                <input type="text" id="search-input" placeholder="search ur music">
+            </div>
+
+
+
+                <section id="search" class="search-list">
+
+                    <ul id="musics" class="music-list">
+                        <!-- music list will come here -->
+                    </ul>
+
+                </section>
+
+
+        </aside>
+
+        <main id="Cont" class="content">
+            <!-- main website -->
+
+        </main>
+    </div>
+
+
+<div id="p1" class="player">
+
+    <div id="ove1" class="overlay">
+
+        <!-- Song Details -->
+        <div id="sf" class="song-info">
+            <h2 id="song-title">Song Title</h2>
+            <p id="artist-name">Artist Name</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="pro1" class="progress">
+
+            <span id="current-time">0:00</span>
+
+            <div id="bar1" class="bar">
+                <div class="fill" id="progress-fill"></div>
+            </div>
+
+            <span id="duration">0:00</span>
+
+        </div>
+
+        <!-- Controls -->
+        <div id="contr1" class="controls">
+
+            <i class="fa-solid fa-shuffle" id="shuffle"></i>
+
+            <i class="fa-solid fa-backward-step" id="prev"></i>
+
+            <button id="play-btn">
+                <i class="fa-solid fa-play" id="play-icon"></i>
+            </button>
+
+            <i class="fa-solid fa-forward-step" id="next"></i>
+
+            <i class="fa-solid fa-repeat" id="repeat"></i>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Hidden Audio -->
+<audio id="audio"></audio>
+
+<script src="script.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

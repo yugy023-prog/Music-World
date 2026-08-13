@@ -1,0 +1,255 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+
+    background:#0f0f0f;
+    color:white;
+    height:100vh;
+
+}
+
+.heading{
+    padding-bottom: 10px;
+    text-align: center;
+    padding-top: 20px;
+    height: 70px;
+}
+
+.heading h1{
+    font-size: 40px;
+    
+    color:rgb(80, 132, 80);;
+}
+
+.container{
+    display: flex;
+    
+}
+
+.sidedar{
+    width: 320px;
+    padding: 20px;
+    border-right: 1px solid #2c2c2c;
+    height: calc(100vh-70px);
+    background:#181818;
+
+}
+
+#search-input{
+    width: 135px;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    background: #2d2d2d;
+}
+
+#search-input::placeholder{
+
+    color:#aaa;
+
+}
+
+.search-list{
+    margin-top: 20px;
+    overflow-y: auto;
+    height: 80%;
+}
+
+.music-list{
+    list-style: none;
+}
+
+.music-list li{
+
+    background:#242424;
+
+    margin-bottom:12px;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.music-list li:hover{
+
+    background:#333;
+
+}
+
+.content{
+
+    flex:1;
+
+    height:calc(100vh - 160px);
+
+    padding:30px;
+
+}
+
+/* ================= PLAYER ================= */
+
+.player{
+
+    position:fixed;
+
+    bottom:0;
+
+    left:0;
+
+    width:100%;
+
+    height:90px;
+
+   
+
+    
+
+}
+
+.overlay{
+
+    height:100%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 400px 200px;
+
+}
+
+/* Song */
+
+.song-info{
+
+    width:250px;
+
+}
+
+.song-info h2{
+
+    font-size:20px;
+
+}
+
+.song-info p{
+
+    color:#b3b3b3;
+
+    margin-top:5px;
+
+}
+
+/* Middle */
+
+.progress{
+
+    width:500px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.bar{
+
+    flex:1;
+
+    height:5px;
+
+    background:#555;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+.fill{
+
+    width:0%;
+
+    height:100%;
+
+    background:#1DB954;
+
+}
+
+/* Controls */
+
+.controls{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:30px;
+
+}
+
+.controls i{
+
+    font-size:22px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.controls i:hover{
+
+    color:#1DB954;
+
+}
+
+#play-btn{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    border:none;
+
+    background:#1DB954;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+#play-btn i{
+
+    font-size:22px;
+
+}
+
+#play-btn:hover{
+
+    transform:scale(1.1);
+
+}
+
