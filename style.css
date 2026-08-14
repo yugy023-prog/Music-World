@@ -31,11 +31,11 @@ body{
     
 }
 
-.sidedar{
+.sidebar{
     width: 320px;
     padding: 20px;
     border-right: 1px solid #2c2c2c;
-    height: calc(100vh-70px);
+    height: calc(100vh - 70px);
     background:#181818;
 
 }
