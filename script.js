@@ -1,8 +1,8 @@
 // ========================================
-// MUSIC WORLD - MUSIC SEARCH & PLAYER
+// MUSIC WORLD
 // ========================================
 
-// ---------- HTML ELEMENTS ----------
+// ---------- ELEMENTS ----------
 
 const searchInput = document.getElementById("search-input");
 const musicList = document.getElementById("musics");
@@ -43,28 +43,31 @@ let isRepeat = false;
 
 searchInput.addEventListener("input", function () {
 
-    const searchText = searchInput.value.trim();
+    const query = searchInput.value.trim();
 
-    if (searchText === "") {
+    if (query === "") {
+
         musicList.innerHTML = "";
         songs = [];
+
         return;
     }
 
-    searchMusic(searchText);
+    searchMusic(query);
 
 });
 
 
 // ========================================
-// GET MUSIC FROM API
+// SEARCH API
 // ========================================
 
 async function searchMusic(query) {
 
     try {
 
-        musicList.innerHTML = "<li>Searching...</li>";
+        musicList.innerHTML =
+            "<li>Searching...</li>";
 
         const url =
             `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&entity=song&limit=25`;
@@ -85,10 +88,10 @@ async function searchMusic(query) {
 
     catch (error) {
 
-        console.error("Search error:", error);
+        console.error(error);
 
         musicList.innerHTML =
-            "<li>Unable to load music. Try again.</li>";
+            "<li>Unable to load music.</li>";
 
     }
 
@@ -109,7 +112,6 @@ function displaySongs(songArray) {
             "<li>No songs found.</li>";
 
         return;
-
     }
 
     songArray.forEach((song, index) => {
@@ -119,20 +121,26 @@ function displaySongs(songArray) {
         li.className = "song";
 
         li.innerHTML = `
-            
-            <img 
+
+            <img
                 src="${song.artworkUrl100}"
                 alt="${escapeHTML(song.trackName)}"
             >
 
             <div class="song-info">
-                <h4>${escapeHTML(song.trackName)}</h4>
-                <p>${escapeHTML(song.artistName)}</p>
+
+                <h4>
+                    ${escapeHTML(song.trackName)}
+                </h4>
+
+                <p>
+                    ${escapeHTML(song.artistName)}
+                </p>
+
             </div>
 
         `;
 
-        // Click song
         li.addEventListener("click", function () {
 
             playSong(index);
@@ -153,6 +161,7 @@ function displaySongs(songArray) {
 function playSong(index) {
 
     if (!songs[index]) {
+        console.log("Song not found");
         return;
     }
 
@@ -160,26 +169,46 @@ function playSong(index) {
 
     const song = songs[index];
 
-    // Set audio
-    audio.src = song.previewUrl;
+    console.log("Song:", song.trackName);
+    console.log("Preview URL:", song.previewUrl);
 
-    // Update information
+    // Set player information
     songTitle.textContent = song.trackName;
     artistName.textContent = song.artistName;
 
-    // Play
+    // Set audio
+    audio.src = song.previewUrl;
+    audio.load();
+
+    // Background
+    const backgroundImage =
+        song.artworkUrl100.replace("100x100", "1000x1000");
+
+    document.body.style.backgroundImage =
+        `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.88)), url("${backgroundImage}")`;
+
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+
+    // Play after loading
     audio.play()
         .then(() => {
 
-            updatePlayIcon();
+            console.log("Audio is playing");
+
+            playIcon.classList.remove("fa-play");
+            playIcon.classList.add("fa-pause");
 
         })
         .catch(error => {
 
-            console.log("Playback error:", error);
+            console.error("AUDIO ERROR:", error);
+
+            alert(
+                "Audio could not play. Open the browser console (F12) and check the error."
+            );
 
         });
-
 }
 
 
@@ -192,18 +221,22 @@ playBtn.addEventListener("click", function () {
     if (!audio.src) {
 
         if (songs.length > 0) {
+
             playSong(0);
+
         }
 
         return;
-
     }
+
 
     if (audio.paused) {
 
         audio.play();
 
-    } else {
+    }
+
+    else {
 
         audio.pause();
 
@@ -213,7 +246,7 @@ playBtn.addEventListener("click", function () {
 
 
 // ========================================
-// UPDATE PLAY ICON
+// PLAY ICON
 // ========================================
 
 audio.addEventListener("play", function () {
@@ -221,6 +254,7 @@ audio.addEventListener("play", function () {
     updatePlayIcon();
 
 });
+
 
 audio.addEventListener("pause", function () {
 
@@ -233,13 +267,25 @@ function updatePlayIcon() {
 
     if (audio.paused) {
 
-        playIcon.classList.remove("fa-pause");
-        playIcon.classList.add("fa-play");
+        playIcon.classList.remove(
+            "fa-pause"
+        );
 
-    } else {
+        playIcon.classList.add(
+            "fa-play"
+        );
 
-        playIcon.classList.remove("fa-play");
-        playIcon.classList.add("fa-pause");
+    }
+
+    else {
+
+        playIcon.classList.remove(
+            "fa-play"
+        );
+
+        playIcon.classList.add(
+            "fa-pause"
+        );
 
     }
 
@@ -263,23 +309,33 @@ function playNextSong() {
         return;
     }
 
+
     let nextIndex;
+
 
     if (isShuffle) {
 
         nextIndex =
-            Math.floor(Math.random() * songs.length);
+            Math.floor(
+                Math.random() * songs.length
+            );
 
-    } else {
+    }
+
+    else {
 
         nextIndex =
             currentSongIndex + 1;
 
+
         if (nextIndex >= songs.length) {
+
             nextIndex = 0;
+
         }
 
     }
+
 
     playSong(nextIndex);
 
@@ -296,12 +352,18 @@ previousBtn.addEventListener("click", function () {
         return;
     }
 
+
     let previousIndex =
         currentSongIndex - 1;
 
+
     if (previousIndex < 0) {
-        previousIndex = songs.length - 1;
+
+        previousIndex =
+            songs.length - 1;
+
     }
+
 
     playSong(previousIndex);
 
@@ -316,7 +378,10 @@ shuffleBtn.addEventListener("click", function () {
 
     isShuffle = !isShuffle;
 
-    shuffleBtn.classList.toggle("active", isShuffle);
+    shuffleBtn.classList.toggle(
+        "active",
+        isShuffle
+    );
 
 });
 
@@ -329,7 +394,10 @@ repeatBtn.addEventListener("click", function () {
 
     isRepeat = !isRepeat;
 
-    repeatBtn.classList.toggle("active", isRepeat);
+    repeatBtn.classList.toggle(
+        "active",
+        isRepeat
+    );
 
 });
 
@@ -343,9 +411,12 @@ audio.addEventListener("ended", function () {
     if (isRepeat) {
 
         audio.currentTime = 0;
+
         audio.play();
 
-    } else {
+    }
+
+    else {
 
         playNextSong();
 
@@ -355,62 +426,79 @@ audio.addEventListener("ended", function () {
 
 
 // ========================================
-// AUDIO DURATION
+// DURATION
 // ========================================
 
-audio.addEventListener("loadedmetadata", function () {
+audio.addEventListener(
+    "loadedmetadata",
+    function () {
 
-    duration.textContent =
-        formatTime(audio.duration);
+        duration.textContent =
+            formatTime(audio.duration);
 
-});
+    }
+);
 
 
 // ========================================
 // CURRENT TIME
 // ========================================
 
-audio.addEventListener("timeupdate", function () {
+audio.addEventListener(
+    "timeupdate",
+    function () {
 
-    if (!audio.duration) {
-        return;
+        if (!audio.duration) {
+            return;
+        }
+
+
+        currentTime.textContent =
+            formatTime(audio.currentTime);
+
+
+        const percentage =
+            (audio.currentTime /
+            audio.duration) * 100;
+
+
+        progressFill.style.width =
+            percentage + "%";
+
     }
-
-    currentTime.textContent =
-        formatTime(audio.currentTime);
-
-    const percentage =
-        (audio.currentTime / audio.duration) * 100;
-
-    progressFill.style.width =
-        percentage + "%";
-
-});
+);
 
 
 // ========================================
-// PROGRESS BAR CLICK
+// PROGRESS BAR
 // ========================================
 
-progressBar.addEventListener("click", function (event) {
+progressBar.addEventListener(
+    "click",
+    function (event) {
 
-    if (!audio.duration) {
-        return;
+        if (!audio.duration) {
+            return;
+        }
+
+
+        const width =
+            progressBar.clientWidth;
+
+
+        const clickPosition =
+            event.offsetX;
+
+
+        const percentage =
+            clickPosition / width;
+
+
+        audio.currentTime =
+            percentage * audio.duration;
+
     }
-
-    const width =
-        progressBar.clientWidth;
-
-    const clickPosition =
-        event.offsetX;
-
-    const percentage =
-        clickPosition / width;
-
-    audio.currentTime =
-        percentage * audio.duration;
-
-});
+);
 
 
 // ========================================
@@ -420,16 +508,21 @@ progressBar.addEventListener("click", function (event) {
 function formatTime(seconds) {
 
     if (isNaN(seconds)) {
+
         return "0:00";
+
     }
+
 
     const minutes =
         Math.floor(seconds / 60);
 
-    const remainingSeconds =
+
+    const secondsLeft =
         Math.floor(seconds % 60);
 
-    return `${minutes}:${remainingSeconds
+
+    return `${minutes}:${secondsLeft
         .toString()
         .padStart(2, "0")}`;
 
@@ -437,14 +530,18 @@ function formatTime(seconds) {
 
 
 // ========================================
-// PREVENT HTML IN SONG DATA
+// SECURITY
 // ========================================
 
 function escapeHTML(text) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
 
-    div.textContent = text;
+
+    div.textContent =
+        text;
+
 
     return div.innerHTML;
 
