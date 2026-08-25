@@ -65,92 +65,31 @@ body{
 }
 
 .sidebar{
-    width: 320px;
-    padding: 20px;
-    border-right: 1px solid #2c2c2c;
-    height: calc(100vh - 70px);
-    background:#181818;
-
+    position:fixed; left:0; top:70px; width:60px;
+    height:calc(100vh - 160px); background:#181818;
+    border-right:1px solid #2c2c2c; overflow:hidden; z-index:100;
+    transition:width .4s ease;
 }
-
-#search-input{
-    width: 135px;
-    padding: 10px;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 16px;
-    background: #2d2d2d;
-}
-
-#search-input::placeholder{
-
-    color:#aaa;
-
-}
-
-.search-list{
-    margin-top: 20px;
-    overflow-y: auto;
-    height: 80%;
-
-    max-height:0;
-    opacity:0;
-    transform:translateY(-6px);
-    overflow:hidden;
-    pointer-events:none;
-
-    transition:max-height .4s ease, opacity .3s ease, transform .3s ease;
-}
-
-/* Reveal the results the moment the pointer is over the sidebar,
-   or the search input has focus (keyboard users) */
-.sidebar:hover .search-list,
-.sidebar:focus-within .search-list{
-
-    max-height:80vh;
-    opacity:1;
-    transform:translateY(0);
-    overflow-y:auto;
-    pointer-events:auto;
-
-}
-
-.music-list{
-    list-style: none;
-}
-
-.music-list li{
-
-    background:#242424;
-
-    margin-bottom:12px;
-
-    padding:12px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    transition:.3s;
-
-}
-
-.music-list li:hover{
-
-    background:#333;
-
-}
+.sidebar:hover, .sidebar:focus-within{ width:320px; }
+.search-tab{ width:320px; height:60px; display:flex; align-items:center; gap:18px; padding:0 20px; cursor:pointer; color:white; font-size:16px; white-space:nowrap; }
+.search-tab i{ font-size:20px; min-width:20px; color:#1DB954; }
+.search-tab span{ opacity:0; transition:opacity .2s ease; }
+.sidebar:hover .search-tab span, .sidebar:focus-within .search-tab span{ opacity:1; }
+.sidebar-content{ width:320px; padding:0 20px; opacity:0; transition:opacity .25s ease; pointer-events:none; }
+.sidebar:hover .sidebar-content, .sidebar:focus-within .sidebar-content{ opacity:1; pointer-events:auto; }
+#search-input{ width:100%; padding:12px 15px; border:none; outline:none; border-radius:8px; color:white; font-size:16px; background:#2d2d2d; }
+#search-input::placeholder{ color:#aaa; }
+.search-list{ margin-top:20px; height:calc(100vh - 250px); overflow-y:auto; padding-right:5px; }
+.music-list{ list-style:none; }
+.music-list li{ background:#242424; margin-bottom:12px; padding:12px; border-radius:10px; cursor:pointer; transition:.3s; }
+.music-list li:hover{ background:#333; transform:translateX(4px); }
 
 .content{
-
-    flex:1;
-
+    width:100%;
     height:calc(100vh - 160px);
-
     padding:30px;
-
+    margin-left:60px;
+    transition:margin-left .4s ease;
 }
 
 /* ================= PLAYER ================= */
