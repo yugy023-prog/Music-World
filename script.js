@@ -1,6 +1,18 @@
 // ========================================
 // MUSIC WORLD - JAMENDO VERSION
 // ========================================
+//
+// NOTE ON THE CATALOG: Jamendo is a free, independent-artist library.
+// It has real songs across many moods and genres (chill, love, sad,
+// party, hip-hop beats, etc.) but it is NOT a mirror of commercial
+// Bollywood/Punjabi/major-label English catalogs - those are licensed
+// content and no free/legal API hands out their full audio. Search
+// terms like "hindi", "punjabi", "love", "sad", "party" will return
+// whatever independent tracks Jamendo has tagged that way, which is
+// real but narrower than mainstream radio. See the chat reply for
+// legitimate ways to broaden this later (e.g. Spotify Web Playback
+// SDK with a user's own Premium account).
+//
 
 
 // ========================================
@@ -38,6 +50,14 @@ const duration = document.getElementById("duration");
 const progressFill = document.getElementById("progress-fill");
 const progressBar = document.getElementById("bar1");
 
+const bgLayerA = document.getElementById("bg-layer-a");
+const bgLayerB = document.getElementById("bg-layer-b");
+
+const bgPickerBtn = document.getElementById("bg-picker-btn");
+const bgFileInput = document.getElementById("bg-file-input");
+const bgClearBtn = document.getElementById("bg-clear-btn");
+const bgPickerLabel = document.getElementById("bg-picker-label");
+
 
 // ========================================
 // VARIABLES
@@ -52,6 +72,16 @@ let isShuffle = false;
 let isRepeat = false;
 
 let searchTimer;
+
+// Custom background photos (chosen by the user from their own device)
+let customBackgrounds = [];   // array of object URLs
+let customBgIndex = 0;
+let customBgTimer = null;
+
+// Which of the two crossfade layers is currently on top
+let activeBgLayer = "a";
+
+const CUSTOM_BG_INTERVAL_MS = 8000; // how long each user photo stays on screen
 
 
 // ========================================
@@ -257,27 +287,17 @@ function playSong(index) {
 
     // ------------------------------------
     // CHANGE BACKGROUND
+    //
+    // If the user has picked their own photos, those keep running
+    // as a slideshow and we leave them alone. Otherwise every new
+    // song fades to its own album art.
     // ------------------------------------
 
-    document.body.style.backgroundImage = `
+    if (customBackgrounds.length === 0) {
 
-        linear-gradient(
-            rgba(0,0,0,0.70),
-            rgba(0,0,0,0.88)
-        ),
+        setBackground(song.image);
 
-        url("${song.image}")
-
-    `;
-
-
-    document.body.style.backgroundSize = "cover";
-
-    document.body.style.backgroundPosition = "center";
-
-    document.body.style.backgroundAttachment = "fixed";
-
-    document.body.style.backgroundRepeat = "no-repeat";
+    }
 
 
     // ------------------------------------
@@ -621,6 +641,144 @@ progressBar.addEventListener(
     }
 
 );
+
+
+// ========================================
+// BACKGROUND: CROSSFADE BETWEEN TWO LAYERS
+// ========================================
+
+function setBackground(url) {
+
+    const incoming = activeBgLayer === "a" ? bgLayerB : bgLayerA;
+    const outgoing = activeBgLayer === "a" ? bgLayerA : bgLayerB;
+
+    incoming.style.backgroundImage = `url("${url}")`;
+
+    // Force the browser to fade the new layer in and the old one out
+    incoming.classList.add("is-visible");
+    outgoing.classList.remove("is-visible");
+
+    activeBgLayer = activeBgLayer === "a" ? "b" : "a";
+
+}
+
+
+// ========================================
+// BACKGROUND: USER'S OWN GALLERY PHOTOS
+// ========================================
+
+function startCustomSlideshow() {
+
+    if (customBgTimer || customBackgrounds.length === 0) {
+
+        return;
+
+    }
+
+
+    customBgIndex = 0;
+
+    setBackground(customBackgrounds[customBgIndex]);
+
+
+    customBgTimer = setInterval(function () {
+
+        // Loop back to the first photo once we reach the end
+        customBgIndex = (customBgIndex + 1) % customBackgrounds.length;
+
+        setBackground(customBackgrounds[customBgIndex]);
+
+    }, CUSTOM_BG_INTERVAL_MS);
+
+}
+
+
+function stopCustomSlideshow() {
+
+    if (customBgTimer) {
+
+        clearInterval(customBgTimer);
+
+        customBgTimer = null;
+
+    }
+
+}
+
+
+bgPickerBtn.addEventListener("click", function () {
+
+    bgFileInput.click();
+
+});
+
+
+bgFileInput.addEventListener("change", function () {
+
+    const files = Array.from(bgFileInput.files || []);
+
+    if (files.length === 0) {
+
+        return;
+
+    }
+
+
+    // Clean up any previously chosen photos first
+    customBackgrounds.forEach(function (url) {
+
+        URL.revokeObjectURL(url);
+
+    });
+
+
+    stopCustomSlideshow();
+
+
+    customBackgrounds = files.map(function (file) {
+
+        return URL.createObjectURL(file);
+
+    });
+
+
+    bgPickerLabel.textContent = `Background (${customBackgrounds.length})`;
+
+    bgClearBtn.hidden = false;
+
+
+    startCustomSlideshow();
+
+});
+
+
+bgClearBtn.addEventListener("click", function () {
+
+    stopCustomSlideshow();
+
+
+    customBackgrounds.forEach(function (url) {
+
+        URL.revokeObjectURL(url);
+
+    });
+
+
+    customBackgrounds = [];
+
+    bgPickerLabel.textContent = "Background";
+
+    bgClearBtn.hidden = true;
+
+
+    // Fall back to the current song's own album art, if any
+    if (currentSongIndex !== -1 && songs[currentSongIndex]) {
+
+        setBackground(songs[currentSongIndex].image);
+
+    }
+
+});
 
 
 // ========================================

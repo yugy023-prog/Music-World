@@ -6,8 +6,14 @@
     <title>Music World</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+
+    <!-- Background layers used for the crossfade + custom photo slideshow -->
+    <div id="bg-layer-a" class="bg-layer"></div>
+    <div id="bg-layer-b" class="bg-layer"></div>
+
     <header id="headers" class="heading"> 
         <h1> Music World</h1>
 
@@ -64,17 +70,33 @@
         <!-- Controls -->
         <div id="contr1" class="controls">
 
-            <i class="fa-solid fa-shuffle" id="shuffle"></i>
+            <i class="fa-solid fa-shuffle" id="shuffle" title="Shuffle"></i>
 
-            <i class="fa-solid fa-backward-step" id="prev"></i>
+            <i class="fa-solid fa-backward-step" id="prev" title="Previous"></i>
 
             <button id="play-btn">
                 <i class="fa-solid fa-play" id="play-icon"></i>
             </button>
 
-            <i class="fa-solid fa-forward-step" id="next"></i>
+            <i class="fa-solid fa-forward-step" id="next" title="Next"></i>
 
-            <i class="fa-solid fa-repeat" id="repeat"></i>
+            <i class="fa-solid fa-repeat" id="repeat" title="Repeat"></i>
+
+        </div>
+
+        <!-- Background photo picker -->
+        <div id="bg-controls" class="bg-controls">
+
+            <button id="bg-picker-btn" title="Choose background photos from your device">
+                <i class="fa-solid fa-images"></i>
+                <span id="bg-picker-label">Background</span>
+            </button>
+
+            <input type="file" id="bg-file-input" accept="image/*" multiple hidden>
+
+            <button id="bg-clear-btn" title="Use album art instead" hidden>
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
         </div>
 
