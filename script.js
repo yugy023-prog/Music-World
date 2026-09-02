@@ -1,31 +1,9 @@
-// ========================================
-// MUSIC WORLD - AUDIUS VERSION
-// ========================================
-//
-// NOTE ON THE CATALOG: Audius is a free, independent-artist library
-// (open protocol, no signup / no API key needed to read from it).
-// It has real songs across many moods and genres, but like Jamendo
-// it is NOT a mirror of commercial Bollywood/Punjabi/major-label
-// catalogs - those are licensed content and no free/legal API hands
-// out their full audio. Search terms like "hindi", "punjabi", "love",
-// "sad", "party" will return whatever independent tracks Audius has
-// tagged that way, which is real but narrower than mainstream radio.
-//
 
-
-// ========================================
-// API
-// ========================================
-
-// Audius is an open protocol - no client ID / API key needed.
-// "app_name" is just a courtesy identifier for their stats, not a secret.
 const API_BASE = "https://discoveryprovider.audius.co";
 const APP_NAME = "MusicWorld";
 
 
-// ========================================
-// HTML ELEMENTS
-// ========================================
+
 
 const searchInput = document.getElementById("search-input");
 const musicList = document.getElementById("musics");
@@ -59,9 +37,7 @@ const bgClearBtn = document.getElementById("bg-clear-btn");
 const bgPickerLabel = document.getElementById("bg-picker-label");
 
 
-// ========================================
-// VARIABLES
-// ========================================
+
 
 let songs = [];
 
@@ -73,20 +49,18 @@ let isRepeat = false;
 
 let searchTimer;
 
-// Custom background photos (chosen by the user from their own device)
-let customBackgrounds = [];   // array of object URLs
+
+let customBackgrounds = [];   
 let customBgIndex = 0;
 let customBgTimer = null;
 
-// Which of the two crossfade layers is currently on top
+
 let activeBgLayer = "a";
 
-const CUSTOM_BG_INTERVAL_MS = 8000; // how long each user photo stays on screen
+const CUSTOM_BG_INTERVAL_MS = 8000; 
 
 
-// ========================================
-// SEARCH MUSIC
-// ========================================
+
 
 searchInput.addEventListener("input", function () {
 
@@ -105,7 +79,7 @@ searchInput.addEventListener("input", function () {
     }
 
 
-    // Wait a little before API call
+    
     searchTimer = setTimeout(function () {
 
         searchMusic(query);
@@ -115,9 +89,7 @@ searchInput.addEventListener("input", function () {
 });
 
 
-// ========================================
-// SEARCH JAMENDO API
-// ========================================
+
 
 async function searchMusic(query) {
 
@@ -151,8 +123,7 @@ async function searchMusic(query) {
         console.log("Audius API:", data);
 
 
-        // Map Audius' track shape onto the same {name, artist_name, image, audio}
-        // shape the rest of this file already expects, so nothing else changes.
+        
         songs = (data.data || []).map(function (track) {
 
             const art = track.artwork || {};
@@ -189,9 +160,7 @@ async function searchMusic(query) {
 }
 
 
-// ========================================
-// DISPLAY SONGS
-// ========================================
+
 
 function displaySongs(songArray) {
 
@@ -234,7 +203,7 @@ function displaySongs(songArray) {
         `;
 
 
-        // CLICK SONG
+        
 
         li.addEventListener("click", function () {
 
@@ -250,9 +219,7 @@ function displaySongs(songArray) {
 }
 
 
-// ========================================
-// PLAY SONG
-// ========================================
+
 
 function playSong(index) {
 
@@ -275,31 +242,20 @@ function playSong(index) {
     console.log("Audio URL:", song.audio);
 
 
-    // ------------------------------------
-    // UPDATE PLAYER TEXT
-    // ------------------------------------
-
+    
     songTitle.textContent = song.name;
 
     artistName.textContent = song.artist_name;
 
 
-    // ------------------------------------
-    // SET FULL AUDIO
-    // ------------------------------------
+   
 
     audio.src = song.audio;
 
     audio.load();
 
 
-    // ------------------------------------
-    // CHANGE BACKGROUND
-    //
-    // If the user has picked their own photos, those keep running
-    // as a slideshow and we leave them alone. Otherwise every new
-    // song fades to its own album art.
-    // ------------------------------------
+    
 
     if (customBackgrounds.length === 0) {
 
@@ -308,9 +264,7 @@ function playSong(index) {
     }
 
 
-    // ------------------------------------
-    // PLAY AUDIO
-    // ------------------------------------
+    
 
     audio.play()
 
@@ -329,9 +283,7 @@ function playSong(index) {
 }
 
 
-// ========================================
-// PLAY / PAUSE
-// ========================================
+
 
 playBtn.addEventListener("click", function () {
 
@@ -342,7 +294,7 @@ playBtn.addEventListener("click", function () {
     }
 
 
-    // No song selected
+    
 
     if (currentSongIndex === -1) {
 
@@ -368,9 +320,7 @@ playBtn.addEventListener("click", function () {
 });
 
 
-// ========================================
-// PLAY ICON
-// ========================================
+
 
 audio.addEventListener("play", function () {
 
@@ -390,9 +340,6 @@ audio.addEventListener("pause", function () {
 });
 
 
-// ========================================
-// NEXT SONG
-// ========================================
 
 nextBtn.addEventListener("click", function () {
 
@@ -413,7 +360,7 @@ function playNextSong() {
     let nextIndex;
 
 
-    // SHUFFLE MODE
+    
 
     if (isShuffle) {
 
@@ -444,9 +391,7 @@ function playNextSong() {
 }
 
 
-// ========================================
-// PREVIOUS SONG
-// ========================================
+
 
 previousBtn.addEventListener("click", function () {
 
@@ -474,9 +419,6 @@ previousBtn.addEventListener("click", function () {
 });
 
 
-// ========================================
-// SHUFFLE
-// ========================================
 
 shuffleBtn.addEventListener("click", function () {
 
@@ -503,9 +445,7 @@ shuffleBtn.addEventListener("click", function () {
 });
 
 
-// ========================================
-// REPEAT
-// ========================================
+
 
 repeatBtn.addEventListener("click", function () {
 
@@ -532,9 +472,7 @@ repeatBtn.addEventListener("click", function () {
 });
 
 
-// ========================================
-// WHEN SONG ENDS
-// ========================================
+
 
 audio.addEventListener("ended", function () {
 
@@ -555,9 +493,7 @@ audio.addEventListener("ended", function () {
 });
 
 
-// ========================================
-// SONG DURATION
-// ========================================
+
 
 audio.addEventListener(
 
@@ -574,9 +510,6 @@ audio.addEventListener(
 );
 
 
-// ========================================
-// UPDATE PROGRESS BAR
-// ========================================
 
 audio.addEventListener(
 
@@ -610,9 +543,7 @@ audio.addEventListener(
 );
 
 
-// ========================================
-// CLICK PROGRESS BAR
-// ========================================
+
 
 progressBar.addEventListener(
 
@@ -651,9 +582,8 @@ progressBar.addEventListener(
 );
 
 
-// ========================================
-// BACKGROUND: CROSSFADE BETWEEN TWO LAYERS
-// ========================================
+
+
 
 function setBackground(url) {
 
@@ -671,9 +601,7 @@ function setBackground(url) {
 }
 
 
-// ========================================
-// BACKGROUND: USER'S OWN GALLERY PHOTOS
-// ========================================
+
 
 function startCustomSlideshow() {
 
@@ -789,9 +717,7 @@ bgClearBtn.addEventListener("click", function () {
 });
 
 
-// ========================================
-// FORMAT TIME
-// ========================================
+
 
 function formatTime(seconds) {
 
@@ -821,9 +747,7 @@ function formatTime(seconds) {
 }
 
 
-// ========================================
-// ESCAPE HTML
-// ========================================
+
 
 function escapeHTML(text) {
 

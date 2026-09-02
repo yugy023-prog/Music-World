@@ -13,7 +13,6 @@ body{
 
 }
 
-/* ================= BACKGROUND LAYERS ================= */
 
 .bg-layer{
 
@@ -92,7 +91,6 @@ body{
     transition:margin-left .4s ease;
 }
 
-/* ================= PLAYER ================= */
 
 .player{
 
@@ -128,7 +126,6 @@ body{
 
 }
 
-/* Song */
 
 .song-info{
 
@@ -150,7 +147,7 @@ body{
 
 }
 
-/* Middle */
+
 
 .progress{
 
@@ -192,7 +189,7 @@ body{
 
 }
 
-/* Controls */
+
 
 .controls{
 
@@ -252,7 +249,7 @@ body{
 
 }
 
-/* Play icon looks slightly off-center in a circle unless nudged */
+
 #play-icon.fa-play{
 
     margin-left:3px;
@@ -265,7 +262,7 @@ body{
 
 }
 
-/* ================= BACKGROUND PHOTO CONTROLS ================= */
+
 
 .bg-controls{
 
