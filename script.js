@@ -1,17 +1,15 @@
 // ========================================
-// MUSIC WORLD - JAMENDO VERSION
+// MUSIC WORLD - AUDIUS VERSION
 // ========================================
 //
-// NOTE ON THE CATALOG: Jamendo is a free, independent-artist library.
-// It has real songs across many moods and genres (chill, love, sad,
-// party, hip-hop beats, etc.) but it is NOT a mirror of commercial
-// Bollywood/Punjabi/major-label English catalogs - those are licensed
-// content and no free/legal API hands out their full audio. Search
-// terms like "hindi", "punjabi", "love", "sad", "party" will return
-// whatever independent tracks Jamendo has tagged that way, which is
-// real but narrower than mainstream radio. See the chat reply for
-// legitimate ways to broaden this later (e.g. Spotify Web Playback
-// SDK with a user's own Premium account).
+// NOTE ON THE CATALOG: Audius is a free, independent-artist library
+// (open protocol, no signup / no API key needed to read from it).
+// It has real songs across many moods and genres, but like Jamendo
+// it is NOT a mirror of commercial Bollywood/Punjabi/major-label
+// catalogs - those are licensed content and no free/legal API hands
+// out their full audio. Search terms like "hindi", "punjabi", "love",
+// "sad", "party" will return whatever independent tracks Audius has
+// tagged that way, which is real but narrower than mainstream radio.
 //
 
 
@@ -19,8 +17,10 @@
 // API
 // ========================================
 
-// For testing only
-const CLIENT_ID = "709fa152";
+// Audius is an open protocol - no client ID / API key needed.
+// "app_name" is just a courtesy identifier for their stats, not a secret.
+const API_BASE = "https://discoveryprovider.audius.co";
+const APP_NAME = "MusicWorld";
 
 
 // ========================================
@@ -128,17 +128,11 @@ async function searchMusic(query) {
 
         const url =
 
-            `https://api.jamendo.com/v3.0/tracks/` +
+            `${API_BASE}/v1/tracks/search` +
 
-            `?client_id=${CLIENT_ID}` +
+            `?query=${encodeURIComponent(query)}` +
 
-            `&format=json` +
-
-            `&limit=20` +
-
-            `&namesearch=${encodeURIComponent(query)}` +
-
-            `&audioformat=mp32`;
+            `&app_name=${APP_NAME}`;
 
 
         const response = await fetch(url);
@@ -154,12 +148,26 @@ async function searchMusic(query) {
         const data = await response.json();
 
 
-        console.log("Jamendo API:", data);
+        console.log("Audius API:", data);
 
 
-        songs = data.results.filter(function (song) {
+        // Map Audius' track shape onto the same {name, artist_name, image, audio}
+        // shape the rest of this file already expects, so nothing else changes.
+        songs = (data.data || []).map(function (track) {
 
-            return song.audio;
+            const art = track.artwork || {};
+
+            return {
+
+                name: track.title,
+
+                artist_name: track.user ? track.user.name : "Unknown Artist",
+
+                image: art["480x480"] || art["1000x1000"] || art["150x150"] || "",
+
+                audio: `${API_BASE}/v1/tracks/${track.id}/stream?app_name=${APP_NAME}`
+
+            };
 
         });
 
